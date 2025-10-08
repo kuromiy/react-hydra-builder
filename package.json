@@ -1,0 +1,41 @@
+{
+	"name": "react-hydra-builder",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"postinstall": "npm run build",
+		"test": "echo \"Error: no test specified\"",
+		"prepare": "husky",
+		"lint": "npx @biomejs/biome check",
+		"check": "tsc --noEmit"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/kuromiy/react-hydra-builder.git"
+	},
+	"keywords": [
+		"react",
+		"hydra",
+		"builder",
+		"frontend",
+		"typescript",
+		"component"
+	],
+	"author": "kuromiy",
+	"license": "UNLICENSED",
+	"type": "module",
+	"bugs": {
+		"url": "https://github.com/kuromiy/react-hydra-builder/issues"
+	},
+	"homepage": "https://github.com/kuromiy/react-hydra-builder#readme",
+	"devDependencies": {
+		"@biomejs/biome": "2.2.5",
+		"@commitlint/cli": "^20.1.0",
+		"@commitlint/config-conventional": "^20.0.0",
+		"husky": "^9.1.7",
+		"typescript": "^5.9.3"
+	}
+}
