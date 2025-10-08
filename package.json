@@ -16,8 +16,15 @@
 		"type": "git",
 		"url": "git+https://github.com/kuromiy/react-hydra-builder.git"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"react",
+		"hydra",
+		"builder",
+		"frontend",
+		"typescript",
+		"component"
+	],
+	"author": "kuromiy",
 	"license": "UNLICENSED",
 	"type": "module",
 	"bugs": {
