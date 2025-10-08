@@ -110,7 +110,7 @@ export async function watchBuild({
 
 		// 削除の場合、public/js/に出力されたファイルも削除する
 		if (!stats) {
-			deleteBuildedPageJsFile(filename);
+			deleteBuildedPageJsFile(fullPath, buildTargetFileSuffix);
 			return;
 		}
 
@@ -123,8 +123,11 @@ export async function watchBuild({
 	});
 }
 
-function deleteBuildedPageJsFile(fileName: string) {
-	const path = `./public/js/${fileName}`.replace("tsx", "js");
+function deleteBuildedPageJsFile(
+	filePath: string,
+	buildTargetFileSuffix: string,
+) {
+	const path = toOutFile(filePath, buildTargetFileSuffix);
 	const stats = statSync(path, { throwIfNoEntry: false });
 	if (!stats) {
 		// 削除対象なし
@@ -156,14 +159,14 @@ function isBuild(
 	stats: Stats,
 	buildTargetFileSuffix: string,
 ) {
-	// フォルダの場合はビルド不要
-	if (stats.isDirectory()) {
+	// statsがundefinedの場合はファイルが削除されたとみなす
+	if (!stats) {
+		console.debug("is build: file deleted or missing", fileName, eventType);
 		return false;
 	}
 
-	// renameの場合、新規or削除になりビルド不要
-	if (eventType === "rename") {
-		console.debug("is build rename", fileName, eventType);
+	// フォルダの場合はビルド不要
+	if (stats.isDirectory()) {
 		return false;
 	}
 
