@@ -99,27 +99,31 @@ export async function watchBuild({
 		}
 
 		// ロック取得
-		using locked = lock(filename);
+		const locked = lock(filename);
 		if (!locked.isLock) {
 			return;
 		}
 
-		// フォルダまたは削除された場合は何もしない
-		const fullPath = join(buildTargetDir, filename);
-		const stats = statSync(fullPath, { throwIfNoEntry: false });
+		try {
+			// フォルダまたは削除された場合は何もしない
+			const fullPath = join(buildTargetDir, filename);
+			const stats = statSync(fullPath, { throwIfNoEntry: false });
 
-		// 削除の場合、public/js/に出力されたファイルも削除する
-		if (!stats) {
-			deleteBuildedPageJsFile(fullPath, buildTargetFileSuffix);
-			return;
+			// 削除の場合、public/js/に出力されたファイルも削除する
+			if (!stats) {
+				deleteBuildedPageJsFile(fullPath, buildTargetFileSuffix);
+				return;
+			}
+
+			// ビルド不要の場合は何もしない
+			if (!isBuild(eventType, filename, stats, buildTargetFileSuffix)) {
+				return;
+			}
+
+			await _build(outputDir, buildTargetFileSuffix, fullPath);
+		} finally {
+			locked[Symbol.dispose]();
 		}
-
-		// ビルド不要の場合は何もしない
-		if (!isBuild(eventType, filename, stats, buildTargetFileSuffix)) {
-			return;
-		}
-
-		await _build(outputDir, buildTargetFileSuffix, fullPath);
 	});
 }
 
