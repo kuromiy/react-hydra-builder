@@ -54,13 +54,13 @@ export async function build({
 }
 
 async function _build(
-	_targetDir: string,
+	targetDir: string,
 	targetFileSuffix: string,
 	path: string,
 ) {
 	// プロジェクトルートからの相対パスを計算
 	const importPath = `./${relative(".", path).replace(/\\/g, "/")}`;
-	const outFile = toOutFile(path, targetFileSuffix);
+	const outFile = toOutFile(targetDir, path, targetFileSuffix);
 	await esbuild.build({
 		stdin: {
 			contents: format(TEMPLATE, importPath),
@@ -73,11 +73,11 @@ async function _build(
 	});
 }
 
-export function toOutFile(path: string, suffix: string) {
+function toOutFile(dir: string, path: string, suffix: string) {
 	const fileName = basename(path);
 	// .page.tsxを除去して、.page.jsを追加
 	const name = fileName.replace(suffix, "");
-	return `./public/js/${name}page.js`;
+	return `${dir}/${name}page.js`;
 }
 
 /**
@@ -111,7 +111,7 @@ export async function watchBuild({
 
 			// 削除の場合、public/js/に出力されたファイルも削除する
 			if (!stats) {
-				deleteBuildedPageJsFile(fullPath, buildTargetFileSuffix);
+				deleteBuildedPageJsFile(fullPath, buildTargetFileSuffix, outputDir);
 				return;
 			}
 
@@ -130,8 +130,9 @@ export async function watchBuild({
 function deleteBuildedPageJsFile(
 	filePath: string,
 	buildTargetFileSuffix: string,
+	outputDir: string,
 ) {
-	const path = toOutFile(filePath, buildTargetFileSuffix);
+	const path = toOutFile(outputDir, filePath, buildTargetFileSuffix);
 	const stats = statSync(path, { throwIfNoEntry: false });
 	if (!stats) {
 		// 削除対象なし
