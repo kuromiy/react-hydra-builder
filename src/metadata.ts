@@ -97,10 +97,10 @@ export class ComponentResolver {
 			return componentMeta.scriptFileName;
 		}
 
-		// フォールバック: 従来の命名規則
-		console.warn(
-			`コンポーネント ${componentName} のメタデータが見つかりません`,
+		// メタデータが見つからない場合はエラーを投げる
+		throw new Error(
+			`コンポーネント "${componentName}" のメタデータが見つかりません。` +
+				`ビルドが完了していることを確認してください。`,
 		);
-		return `${componentName.toLowerCase().replace(/page$/, "")}.page.js`;
 	}
 }

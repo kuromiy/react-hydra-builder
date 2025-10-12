@@ -14,6 +14,7 @@ import {
 	extractComponentName,
 	generateMetadataFile,
 	toScriptFileName,
+	toScriptPath,
 } from "./metadata.js";
 import type { ComponentMetadata } from "./types.js";
 import { readFiles } from "./utils.js";
@@ -24,6 +25,7 @@ export {
 	generateMetadataFile,
 	extractComponentName,
 	toScriptFileName,
+	toScriptPath,
 };
 export type { ComponentMetadata };
 
@@ -80,7 +82,7 @@ export async function build({
 		metadata[componentName] = {
 			scriptFileName,
 			originalPath: relativePath,
-			outputPath: `${outputDir}/${scriptFileName}`,
+			outputPath: toScriptPath(outputDir, file, buildTargetFileSuffix),
 		};
 
 		return _build(outputDir, buildTargetFileSuffix, file);
@@ -143,7 +145,7 @@ export async function watchBuild({
 		metadata[componentName] = {
 			scriptFileName,
 			originalPath: relativePath,
-			outputPath: `${outputDir}/${scriptFileName}`,
+			outputPath: toScriptPath(outputDir, file, buildTargetFileSuffix),
 		};
 	}
 
@@ -208,7 +210,7 @@ export async function watchBuild({
 				metadata[componentName] = {
 					scriptFileName,
 					originalPath: relativePath,
-					outputPath: `${outputDir}/${scriptFileName}`,
+					outputPath: toScriptPath(outputDir, fullPath, buildTargetFileSuffix),
 				};
 
 				// メタデータファイルを更新
